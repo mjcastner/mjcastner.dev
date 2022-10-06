@@ -1,0 +1,28 @@
+name: mjcastner.dev build / deployment workflow
+on:
+  push:
+    branches:
+      - main
+jobs:
+  flutter_web_client:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      - run: gcloud auth configure-docker --quiet
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+      - name: Build Flutter web app
+        run: flutter build web --pwa-strategy=none
+      - name: Build Flutter web Docker image
+        run: docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/mjcastner-dev-website:latest .
+      - name: Push Flutter web Docker image to GCR
+        run: docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/mjcastner-dev-website:latest
+      - name: Deploy Flutter web app to Cloud Run
+        run: gcloud run deploy mjcastner-dev-website --image="gcr.io/${{ secrets.GCP_PROJECT_ID }}/mjcastner-dev-website:latest" --port 80 --allow-unauthenticated --platform managed --region ${{ secrets.GCP_REGION }}
