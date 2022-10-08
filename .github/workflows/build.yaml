@@ -10,10 +10,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - id: 'auth'
-        name: Authenticate GCloud SDK
         uses: 'google-github-actions/auth@v0'
         with:
-          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_ID }}
+          service_account: ${{ secrets.GCP_SA_ID }}
       - name: Set up GCloud SDK
         uses: google-github-actions/setup-gcloud@v0
         with:
@@ -28,5 +28,9 @@ jobs:
         run: docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/mjcastner-dev-website:latest .
       - name: Push Docker image to GCR
         run: docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/mjcastner-dev-website:latest
-      - name: Deploy Docker image to Cloud Run
-        run: gcloud run deploy mjcastner-dev-website --image="gcr.io/${{ secrets.GCP_PROJECT_ID }}/mjcastner-dev-website:latest" --port 80 --allow-unauthenticated --platform managed --region ${{ secrets.GCP_REGION }}
+      - name: 'Deploy to Cloud Run'
+        uses: 'google-github-actions/deploy-cloudrun@v0'
+        with:
+          image: 'gcr.io/${{ secrets.GCP_PROJECT_ID }}/mjcastner-dev-website:latest'
+          service: 'mjcastner-dev-website'
+          region: '${{ secrets.GCP_REGION }}'
