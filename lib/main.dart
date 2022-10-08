@@ -74,6 +74,15 @@ class _DevRootState extends State<DevRoot> {
         style: GoogleFonts.robotoMono(color: Colors.green),
       ),
     ),
+    InkWell(
+      onTap: () {
+        launchUrl(Uri.parse('https://tarot.mjcastner.dev/'));
+      },
+      child: Text(
+        '    tarot_flutter_demo',
+        style: GoogleFonts.robotoMono(color: Colors.green),
+      ),
+    ),
     const SizedBox(height: 5),
     Text(
       'InProgressProjects/',
