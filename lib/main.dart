@@ -156,11 +156,11 @@ class _DevRootState extends State<DevRoot> {
         style: GoogleFonts.robotoMono(color: Colors.green),
       ),
     ),
-    const SizedBox(height: 5),
-    Text(
-      'resume.pdf',
-      style: GoogleFonts.robotoMono(color: Colors.green),
-    ),
+    // const SizedBox(height: 5),
+    // Text(
+    //   'resume.pdf',
+    //   style: GoogleFonts.robotoMono(color: Colors.green),
+    // ),
   ];
 
   @override

@@ -1,2 +1,2 @@
 # mjcastner.dev
-Personal website
+Code for my personal website, hosted at [mjcastner.dev](http://mjcastner.dev).
